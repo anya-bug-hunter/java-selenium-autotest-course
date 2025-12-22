@@ -1,22 +1,12 @@
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FirstTest {
-
-    private WebDriver driver;
-
-    @BeforeEach
-    public void setUp() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-    }
+public class FirstTest extends BaseTest {
 
     @Test
     public void checkTitle() throws InterruptedException {
@@ -29,8 +19,26 @@ public class FirstTest {
 
     }
 
-    @AfterEach
-    public void tearDown() {
-        driver.quit();
+    @Test
+    public void checkLocatorsCss() throws InterruptedException {
+        driver.get("https://limestore.com/ru_ru/");
+        Thread.sleep(8000);
+
+        WebElement logo = driver.findElement(By.id("logo"));
+        assertTrue(logo.isDisplayed());
+
+        WebElement searchInput = driver.findElement(By.name("search"));
+        assertFalse(searchInput.isDisplayed());
+
+        List<WebElement> iconButtons = driver.findElements(By.className("btn-control"));
+        assertEquals(4, iconButtons.size());
+
+        List<WebElement> buttons = driver.findElements(By.tagName("button"));
+        assertTrue(buttons.size() > 1);
+
+        WebElement menu = driver.findElement(By.cssSelector("#logo .hamburger-menu.burger"));
+        menu.click();
+
+        Thread.sleep(1000);
     }
 }
